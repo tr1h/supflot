@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Каталог досок</h2>
+<div class="row">
+  {% for b in boards %}
+  <div class="col-md-4 mb-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">{{ b.name }}</h5>
+        <p class="card-text">Локация: {{ b.location }}<br>
+          Цена: {{ b.price }} ₽/час<br>
+          Всего: {{ b.total }}</p>
+        <a href="{{ url_for('book', board_id=b.id) }}" class="btn btn-primary">Забронировать</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

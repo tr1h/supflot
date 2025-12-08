@@ -1,0 +1,51 @@
+{% extends 'admin/master.html' %}
+
+{% block head %}
+  {{ super() }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+  <h2>График бронирований за последние 7 дней</h2>
+  <canvas id="bookingsChart" height="100"></canvas>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    const dates  = {{ dates|tojson }};
+    const counts = {{ counts|tojson }};
+    const revs   = {{ revenues|tojson }};
+
+    new Chart(
+      document.getElementById('bookingsChart'),
+      {
+        type: 'bar',
+        data: {
+          labels: dates,
+          datasets: [
+            {
+              label: 'Бронирований',
+              data: counts,
+              yAxisID: 'y-count'
+            },
+            {
+              label: 'Выручка, ₽',
+              data: revs,
+              type: 'line',
+              yAxisID: 'y-rev'
+            }
+          ]
+        },
+        options: {
+          scales: {
+            'y-count': { position: 'left',  title: { display:true, text:'Штук' } },
+            'y-rev':   { position: 'right', title: { display:true, text:'₽'   } }
+          }
+        }
+      }
+    );
+  </script>
+{% endblock %}

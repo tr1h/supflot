@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Кабинет пользователя</title>
+  <link rel="stylesheet" href="/static/bootstrap.min.css">
+</head>
+<body class="p-4">
+
+  <h1>👤 Личный кабинет</h1>
+  <p>Здесь вы можете посмотреть историю броней и ваши бонусы.</p>
+
+  <div class="mb-4">
+    <button id="loadBonuses" class="btn btn-success">Показать бонусы</button>
+    <div id="bonusesResult" class="mt-2"></div>
+  </div>
+
+  <div>
+    <button id="loadBookings" class="btn btn-primary">Загрузить историю броней</button>
+    <table class="table table-striped mt-2" id="bookingsTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>ID</th><th>Дата</th><th>Время</th><th>Кол-во</th><th>Статус</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const userId = /* подставьте ваш user_id, например из cookie */ 1;
+
+    document.getElementById('loadBonuses').onclick = async () => {
+      const res = await fetch(`/user/bonuses?user_id=${userId}`);
+      const json = await res.json();
+      document.getElementById('bonusesResult').innerText = `🎁 ${json.bonuses} баллов`;
+    };
+
+    document.getElementById('loadBookings').onclick = async () => {
+      const res = await fetch(`/user/bookings?user_id=${userId}`);
+      const rows = await res.json();
+      const tbody = document.querySelector('#bookingsTable tbody');
+      tbody.innerHTML = '';
+      rows.forEach(bk => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${bk.id}</td>
+          <td>${bk.date}</td>
+          <td>${bk.start_time}:00</td>
+          <td>${bk.quantity}</td>
+          <td>${bk.status}</td>`;
+        tbody.append(tr);
+      });
+      document.getElementById('bookingsTable').style.display = rows.length ? '' : 'none';
+    };
+  </script>
+</body>
+</html>

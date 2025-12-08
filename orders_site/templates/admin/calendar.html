@@ -1,0 +1,46 @@
+{% extends 'admin/master.html' %}
+
+{% block head %}
+  {{ super() }}
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+  <style>
+    #calendar {
+      max-width: 900px;
+      margin: 40px auto;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+  <h2>Календарь бронирований</h2>
+  <div id="calendar"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const calendarEl = document.getElementById('calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'ru',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: '/api/bookings/events',
+        eventClick: function(info) {
+          const id = info.event.id;
+          // Перенаправление на страницу редактирования брони (Flask-Admin)
+          window.location.href = "{{ url_for('bookingview.edit_view', id='') }}" + id;
+        },
+        editable: false
+      });
+      calendar.render();
+    });
+  </script>
+{% endblock %}

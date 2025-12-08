@@ -1,0 +1,24 @@
+/* Плавные переходы */
+* {
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Кастомные кнопки */
+.btn-primary {
+    background: linear-gradient(135deg, #4361ee, #3a0ca3);
+    border: none;
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, #3a0ca3, #4361ee);
+    transform: scale(1.03);
+}
+
+/* Анимация загрузки */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+.loading {
+    animation: pulse 1.5s infinite;
+}
