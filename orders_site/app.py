@@ -9,6 +9,7 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from dotenv import load_dotenv
 import requests
+from miniapp import miniapp_bp
 
 # Загрузка .env
 load_dotenv()
@@ -19,6 +20,9 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
+
+# Регистрация Mini App
+app.register_blueprint(miniapp_bp)
 
 # Конфигурация
 DB_NAME = os.getenv("DB_NAME", "SupBot.db")
