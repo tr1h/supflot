@@ -9,7 +9,13 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from dotenv import load_dotenv
 import requests
-from miniapp import miniapp_bp
+
+# Импорт Mini App (после создания app)
+try:
+    from orders_site.miniapp import miniapp_bp
+except ImportError:
+    # Если импорт не работает, создадим позже
+    miniapp_bp = None
 
 # Загрузка .env
 load_dotenv()

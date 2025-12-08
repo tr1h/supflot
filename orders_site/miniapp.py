@@ -8,10 +8,17 @@ from datetime import datetime, timedelta
 miniapp_bp = Blueprint('miniapp', __name__, url_prefix='/miniapp')
 CORS(miniapp_bp)
 
-DB_NAME = os.getenv("DB_NAME", "SupBot.db")
+# Используем БД бота (supbot.db в корне проекта)
+DB_NAME = os.getenv("DB_NAME", "supbot.db")
+# Путь к БД относительно корня проекта
+import sys
+from pathlib import Path
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+DB_PATH = PROJECT_ROOT / DB_NAME
 
 def get_db():
-    conn = sqlite3.connect(DB_NAME)
+    """Подключение к БД бота"""
+    conn = sqlite3.connect(str(DB_PATH))
     conn.row_factory = sqlite3.Row
     return conn
 
