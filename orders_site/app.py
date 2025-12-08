@@ -10,13 +10,6 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import requests
 
-# Импорт Mini App (после создания app)
-try:
-    from orders_site.miniapp import miniapp_bp
-except ImportError:
-    # Если импорт не работает, создадим позже
-    miniapp_bp = None
-
 # Загрузка .env
 load_dotenv()
 
@@ -28,7 +21,14 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Регистрация Mini App
-app.register_blueprint(miniapp_bp)
+try:
+    from miniapp import miniapp_bp
+    app.register_blueprint(miniapp_bp)
+    logger.info("✅ Mini App зарегистрирован")
+except ImportError as e:
+    logger.warning(f"⚠️ Mini App не найден: {e}")
+except Exception as e:
+    logger.error(f"❌ Ошибка регистрации Mini App: {e}")
 
 # Конфигурация
 DB_NAME = os.getenv("DB_NAME", "SupBot.db")
