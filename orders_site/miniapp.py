@@ -8,6 +8,13 @@ from datetime import datetime, timedelta
 miniapp_bp = Blueprint('miniapp', __name__, url_prefix='/miniapp')
 CORS(miniapp_bp)
 
+# Middleware для пропуска страницы предупреждения ngrok
+@miniapp_bp.after_request
+def skip_ngrok_warning(response):
+    """Добавляет заголовок для пропуска страницы предупреждения ngrok"""
+    response.headers['ngrok-skip-browser-warning'] = 'true'
+    return response
+
 # Используем БД бота (supbot.db в корне проекта)
 DB_NAME = os.getenv("DB_NAME", "supbot.db")
 # Путь к БД относительно корня проекта

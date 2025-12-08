@@ -20,6 +20,13 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+# Middleware для пропуска страницы предупреждения ngrok (для всех маршрутов)
+@app.after_request
+def skip_ngrok_warning(response):
+    """Добавляет заголовок для пропуска страницы предупреждения ngrok"""
+    response.headers['ngrok-skip-browser-warning'] = 'true'
+    return response
+
 # Регистрация Mini App
 try:
     from miniapp import miniapp_bp
