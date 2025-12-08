@@ -23,8 +23,11 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 # Регистрация Mini App
 try:
     from miniapp import miniapp_bp
-    app.register_blueprint(miniapp_bp)
-    logger.info("✅ Mini App зарегистрирован")
+    if miniapp_bp is not None:
+        app.register_blueprint(miniapp_bp)
+        logger.info("✅ Mini App зарегистрирован")
+    else:
+        logger.warning("⚠️ Mini App blueprint is None")
 except ImportError as e:
     logger.warning(f"⚠️ Mini App не найден: {e}")
 except Exception as e:
