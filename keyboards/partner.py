@@ -12,8 +12,9 @@ def get_partner_menu() -> InlineKeyboardMarkup:
             [InlineKeyboardButton(text="⭐ Отзывы", callback_data="partner:reviews")],
             [InlineKeyboardButton(text="🌙 Суточная аренда", callback_data="partner:daily")],
             [InlineKeyboardButton(text="💰 Кошелек", callback_data="partner:wallet")],
-            [InlineKeyboardButton(text="👥 Сотрудники", callback_data="partner:employees")],
-            [InlineKeyboardButton(text="🔙 Назад", callback_data="back_to_menu")],
+                   [InlineKeyboardButton(text="👥 Сотрудники", callback_data="partner:employees")],
+                   [InlineKeyboardButton(text="📖 Документация", callback_data="docs:menu")],
+                   [InlineKeyboardButton(text="🔙 Назад", callback_data="back_to_menu")],
         ]
     )
     return keyboard

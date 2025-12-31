@@ -70,6 +70,7 @@ async def main():
     from handlers.catalog_handlers import register_catalog_handlers
     from handlers.profile_handlers import register_profile_handlers
     from handlers.multi_booking_handlers import register_multi_booking_handlers
+    from handlers.docs_handlers import register_docs_handlers
     
     register_user_handlers(router, db)
     register_booking_handlers(router, db, bot)
@@ -83,6 +84,7 @@ async def main():
     register_catalog_handlers(router, db, bot)
     register_profile_handlers(router, db, bot)
     register_multi_booking_handlers(router, db, bot)
+    register_docs_handlers(router, db, bot)
     
     # Обработчик необработанных callback_query (должен быть последним)
     @router.callback_query()

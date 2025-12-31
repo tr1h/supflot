@@ -10,7 +10,8 @@ def get_main_menu() -> ReplyKeyboardMarkup:
             [KeyboardButton(text="🆕 Новая бронь")],
             [KeyboardButton(text="📋 Мои брони"), KeyboardButton(text="📚 Каталог")],
             [KeyboardButton(text="⭐ Отзывы"), KeyboardButton(text="👤 Профиль")],
-            [KeyboardButton(text="💬 Контакты"), KeyboardButton(text="📄 Оферта")],
+            [KeyboardButton(text="💬 Контакты"), KeyboardButton(text="📖 Документация")],
+            [KeyboardButton(text="📄 Оферта")],
         ],
         resize_keyboard=True
     )

@@ -14,6 +14,7 @@ def get_admin_menu() -> InlineKeyboardMarkup:
             [InlineKeyboardButton(text="⭐ Отзывы", callback_data="admin:reviews")],
             [InlineKeyboardButton(text="👤 Пользователи", callback_data="admin:users")],
             [InlineKeyboardButton(text="📢 Уведомления", callback_data="admin:notifications")],
+            [InlineKeyboardButton(text="📖 Документация", callback_data="docs:menu")],
             [InlineKeyboardButton(text="🔙 Назад", callback_data="back_to_menu")],
         ]
     )
