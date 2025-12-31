@@ -1,0 +1,33 @@
+[
+  {
+    "task": "Создай план для реализации системы отзывов: пользователи могут оставлять отзывы после завершенного бронирования",
+    "type": "planning",
+    "required": true
+  },
+  {
+    "task": "Реализуй обработчики для создания отзыва согласно плану из предыдущего шага",
+    "type": "development",
+    "context": {
+      "plan": "{{step_0_result}}",
+      "existing_files": ["handlers/user_handlers.py", "core/schema.py"]
+    },
+    "required": true
+  },
+  {
+    "task": "Напиши тесты для обработчиков отзывов",
+    "type": "testing",
+    "context": {
+      "code": "{{step_1_result}}"
+    },
+    "required": false
+  },
+  {
+    "task": "Создай документацию для системы отзывов",
+    "type": "documentation",
+    "context": {
+      "code": "{{step_1_result}}"
+    },
+    "required": false
+  }
+]
+

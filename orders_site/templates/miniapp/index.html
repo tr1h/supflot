@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>SUPFLOT</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .section {
+            margin: 20px 0;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .btn:active {
+            opacity: 0.8;
+        }
+        
+        .card {
+            background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏄 SUPFLOT</h1>
+            <p>Аренда SUP-досок</p>
+        </div>
+        
+        <div class="section">
+            <button class="btn" onclick="showProfile()">👤 Профиль</button>
+            <button class="btn" onclick="showLocations()">📍 Локации</button>
+            <button class="btn" onclick="showBookings()">📋 Мои брони</button>
+            <button class="btn" onclick="showPartner()">💼 Партнерская панель</button>
+        </div>
+        
+        <div id="content" class="section"></div>
+    </div>
+    
+    <script>
+        // Инициализация Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+        
+        // Получение данных пользователя
+        const user = tg.initDataUnsafe?.user;
+        
+        function showProfile() {
+            const content = document.getElementById('content');
+            if (user) {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3>Профиль</h3>
+                        <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
+                        <p><strong>Username:</strong> @${user.username || 'не указан'}</p>
+                        <p><strong>ID:</strong> ${user.id}</p>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = '<div class="card"><p>Информация о пользователе недоступна</p></div>';
+            }
+        }
+        
+        function showLocations() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="card"><p>Загрузка локаций...</p></div>';
+            
+            fetch('/api/locations')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        let html = '<div class="card"><h3>Локации</h3>';
+                        data.data.forEach(loc => {
+                            html += `<p><strong>${loc.name}</strong><br>${loc.address}</p><hr>`;
+                        });
+                        html += '</div>';
+                        content.innerHTML = html;
+                    } else {
+                        content.innerHTML = '<div class="card"><p>Ошибка загрузки локаций</p></div>';
+                    }
+                })
+                .catch(error => {
+                    content.innerHTML = '<div class="card"><p>Ошибка подключения</p></div>';
+                });
+        }
+        
+        function showBookings() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="card"><p>Мои бронирования будут здесь</p></div>';
+        }
+        
+        function showPartner() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="card"><p>Партнерская панель будет здесь</p></div>';
+        }
+        
+        // Виброотклик при нажатии
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                tg.HapticFeedback.impactOccurred('light');
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
