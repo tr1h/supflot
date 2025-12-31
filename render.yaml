@@ -1,0 +1,42 @@
+services:
+  # Telegram Bot Service
+  - type: worker
+    name: supflot-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python run_bot.py
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: DB_NAME
+        value: supbot.db
+      - key: ADMIN_IDS
+        value: 202140267,1383730017
+      - key: PLATFORM_COMMISSION_PERCENT
+        value: 10
+      - key: WORK_HOURS_START
+        value: 8
+      - key: WORK_HOURS_END
+        value: 22
+      - key: REVIEW_CHANNEL
+        value: "@supflot_reviews"
+
+  # Website Service
+  - type: web
+    name: supflot-website
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd orders_site && python app.py
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: HOST
+        value: 0.0.0.0
+      - key: DB_NAME
+        value: SupBot.db
+      - key: YK_SHOP_ID
+        sync: false
+      - key: YK_SECRET
+        sync: false
+      - key: OPENWEATHER_KEY
+        sync: false

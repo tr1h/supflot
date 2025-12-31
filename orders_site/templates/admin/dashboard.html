@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="mt-4">Админ-панель</h1>
+
+    <div class="row mt-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">
+                    <h5>Партнёры</h5>
+                    <h2>{{ stats.partners }}</h2>
+                </div>
+                <a href="{{ url_for('admin.partners') }}" class="card-footer text-white">
+                    Подробнее <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Аналогичные карточки для досок, броней и финансов -->
+    </div>
+</div>
+{% endblock %}

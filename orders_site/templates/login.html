@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-4">
+    <h2>Вход</h2>
+    {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    <form method="post">
+      <div class="mb-3">
+        <label>Телефон</label>
+        <input type="text" name="phone" class="form-control" placeholder="+7..." required>
+      </div>
+      <button class="btn btn-primary">Войти</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

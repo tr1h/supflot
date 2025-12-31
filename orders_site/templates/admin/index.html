@@ -1,0 +1,31 @@
+{% extends 'admin/master.html' %}  {# используется Bootstrap4-шаблон Flask-Admin #}
+
+{% block body %}
+<div class="container-fluid mt-4">
+  <h1>Добро пожаловать, {{ current_user.full_name or current_user.username }}!</h1>
+  <p>Выберите раздел в меню слева или воспользуйтесь ссылками ниже:</p>
+  <div class="row">
+    <div class="col-md-3 mb-3">
+      <a href="{{ url_for('bookingview.index_view') }}" class="btn btn-outline-primary w-100">Бронирования</a>
+    </div>
+    <div class="col-md-3 mb-3">
+      <a href="{{ url_for('userview.index_view') }}" class="btn btn-outline-secondary w-100">Пользователи</a>
+    </div>
+    <div class="col-md-3 mb-3">
+      <a href="{{ url_for('boardview.index_view') }}" class="btn btn-outline-success w-100">Доски</a>
+    </div>
+    <div class="col-md-3 mb-3">
+      <a href="{{ url_for('partnerview.index_view') }}" class="btn btn-outline-info w-100">Партнёры</a>
+    </div>
+    <div class="col-md-3 mb-3">
+      <a href="{{ url_for('stats.index') }}" class="btn btn-outline-warning w-100">Статистика</a>
+    </div>
+    <div class="col-md-3 mb-3">
+      <a href="{{ url_for('map.index') }}" class="btn btn-outline-dark w-100">Карта локаций</a>
+    </div>
+    <div class="col-md-3 mb-3">
+      <a href="{{ url_for('logout') }}" class="btn btn-outline-danger w-100">Выйти</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Кабинет партнёра</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/static/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: #f8f9fa; }
+    .stat-card { border: none; border-radius: .75rem; }
+    .stat-card .card-body { text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: bold; }
+  </style>
+</head>
+<body class="pt-4">
+
+  <div class="container">
+    <h1 class="mb-4"><i class="fas fa-handshake"></i> Кабинет партнёра</h1>
+
+    <!-- Статистика -->
+    <div class="row g-3 mb-5">
+      <div class="col-md-4">
+        <div class="card stat-card shadow-sm">
+          <div class="card-body">
+            <small class="text-muted">Завершённых броней</small>
+            <div id="stat-completed" class="stat-value">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card stat-card shadow-sm">
+          <div class="card-body">
+            <small class="text-muted">Оборот (₽)</small>
+            <div id="stat-turnover" class="stat-value">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card stat-card shadow-sm">
+          <div class="card-body">
+            <small class="text-muted">Активных броней</small>
+            <div id="stat-active" class="stat-value">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Навигация по разделам -->
+    <ul class="nav nav-tabs mb-4" id="partnerTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="boards-tab" data-bs-toggle="tab" data-bs-target="#boards" type="button" role="tab">Мои доски</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="bookings-tab" data-bs-toggle="tab" data-bs-target="#bookings" type="button" role="tab">Мои бронирования</button>
+      </li>
+      <li class="nav-item ms-auto" role="presentation">
+        <button class="btn btn-primary" id="addBoardBtn">➕ Добавить доску</button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="partnerTabsContent">
+      <!-- Мои доски -->
+      <div class="tab-pane fade show active" id="boards" role="tabpanel">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr><th>ID</th><th>Название</th><th>Описание</th><th>Всего</th><th>Активно</th></tr>
+          </thead>
+          <tbody id="boardsTable"></tbody>
+        </table>
+      </div>
+
+      <!-- Мои бронирования -->
+      <div class="tab-pane fade" id="bookings" role="tabpanel">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr><th>ID</th><th>Доска</th><th>Дата</th><th>Время</th><th>Статус</th></tr>
+          </thead>
+          <tbody id="bookingsTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно Добавить доску -->
+  <div class="modal fade" id="addBoardModal" tabindex="-1">
+    <div class="modal-dialog">
+      <form id="addBoardForm" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Добавить новую доску</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Название</label>
+            <input type="text" class="form-control" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Описание</label>
+            <textarea class="form-control" name="desc" rows="2"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Всего штук</label>
+            <input type="number" class="form-control" name="total" min="1" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Локация</label>
+            <select class="form-select" name="location_id" required>
+              <option value="">— выберите —</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Добавить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/static/bootstrap.bundle.min.js"></script>
+  <script>
+    const partnerId = new URLSearchParams(location.search).get('partner_id');
+    if (!partnerId) {
+      alert('Не указан partner_id в URL');
+    }
+
+    // Загрузка статистики
+    async function loadStats() {
+      const res = await fetch(`/partner/stats?partner_id=${partnerId}`);
+      const j = await res.json();
+      document.getElementById('stat-completed').innerText = j.completed;
+      document.getElementById('stat-turnover').innerText = j.turnover;
+      document.getElementById('stat-active').innerText = j.active;
+    }
+
+    // Загрузка досок
+    async function loadBoards() {
+      const res = await fetch(`/partner/boards?partner_id=${partnerId}`);
+      const arr = await res.json();
+      const tb = document.getElementById('boardsTable');
+      tb.innerHTML = '';
+      arr.forEach(b => {
+        tb.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td>${b.id}</td>
+            <td>${b.name}</td>
+            <td>${b.description || '—'}</td>
+            <td>${b.total}</td>
+            <td>${b.is_active ? '✅' : '❌'}</td>
+          </tr>
+        `);
+      });
+    }
+
+    // Загрузка бронирований
+    async function loadBookings() {
+      const res = await fetch(`/partner/bookings?partner_id=${partnerId}`);
+      const arr = await res.json();
+      const tb = document.getElementById('bookingsTable');
+      tb.innerHTML = '';
+      arr.forEach(o => {
+        const end = o.start_time + o.duration;
+        tb.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td>${o.id}</td>
+            <td>${o.name}</td>
+            <td>${o.date}</td>
+            <td>${o.start_time}:00–${end}:00</td>
+            <td>${o.status}</td>
+          </tr>
+        `);
+      });
+    }
+
+    // Загрузка списка локаций (для формы)
+    async function loadLocations() {
+      const res = await fetch('/locations');
+      const locs = await res.json();
+      const sel = document.querySelector('#addBoardForm select[name="location_id"]');
+      locs.forEach(l => {
+        sel.insertAdjacentHTML('beforeend',
+          `<option value="${l.id}">${l.name}</option>`
+        );
+      });
+    }
+
+    // Обработчики
+    document.addEventListener('DOMContentLoaded', ()=>{
+      loadStats();
+      loadBoards();
+      loadBookings();
+      loadLocations();
+
+      // открыть модалку
+      document.getElementById('addBoardBtn').onclick = ()=>{
+        new bootstrap.Modal(document.getElementById('addBoardModal')).show();
+      };
+
+      // отправка формы
+      document.getElementById('addBoardForm').onsubmit = async e=>{
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const body = Object.fromEntries(fd.entries());
+        body.partner_id = partnerId;
+        const res = await fetch('/partner/add_board', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(body)
+        });
+        if (res.ok) {
+          loadBoards();
+          loadStats();
+          bootstrap.Modal.getInstance(document.getElementById('addBoardModal')).hide();
+        } else {
+          alert('Ошибка при добавлении');
+        }
+      };
+    });
+  </script>
+</body>
+</html>

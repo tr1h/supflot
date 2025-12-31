@@ -1,0 +1,7 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- волна -->
+  <path d="M0 48 C16 32 48 64 64 48 L64 64 L0 64 Z" fill="#0088cc"></path>
+  <!-- сапбордист -->
+  <circle cx="32" cy="20" r="6" fill="#0088cc"></circle>
+  <rect x="28" y="26" width="8" height="18" rx="4" fill="#0088cc"></rect>
+</svg>

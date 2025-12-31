@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}SUPFLOT{% endblock %}</title>
+  <!-- ваши стили и скрипты -->
+</head>
+<body>
+
+<nav>
+  <a href="{{ url_for('index') }}">Главная</a>
+  {% if session.get('user_id') %}
+    <!-- меню для авторизованных -->
+    <a href="{{ url_for('dashboard') }}">Кабинет</a>
+    <a href="{{ url_for('logout') }}">Выйти</a>
+  {% else %}
+    <!-- меню для гостей -->
+    <a href="{{ url_for('login') }}">Войти</a>
+    <a href="{{ url_for('register') }}">Регистрация</a>
+  {% endif %}
+</nav>
+
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flashes">
+        {% for category, msg in messages %}
+          <li class="flash-{{ category }}">{{ msg }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer>
+  &copy; 2025 SUPFLOT
+</footer>
+
+</body>
+</html>
